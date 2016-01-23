@@ -36,14 +36,10 @@ use keygenqt\autocompleteAjax\AutocompleteAjax;
 
 // Normal select with ActiveForm & model
 <?= $form->field($model, 'user_id')->widget(AutocompleteAjax::classname(), [
-
+    'url' => ['ajax/search-user'],
+    'options' => ['placeholder' => 'Find by user email.']
 ]) ?>
-
 ```
-
-## ScreenShot
-
-![Alt text](https://raw.githubusercontent.com/keygenqt/yii2-autocomplete-ajax/master/screenshot/screen.png?raw=true "")
 
 ## License
 

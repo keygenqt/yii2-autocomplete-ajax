@@ -2,14 +2,19 @@
 
 namespace keygenqt\autocompleteAjax;
 
+use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\widgets\InputWidget;
 
 class AutocompleteAjax extends InputWidget
 {
-    private $_baseUrl;
+    public $url = [];
+    public $options = [];
 
-    public function getBaseUrl()
+    private $_baseUrl;
+    private $_ajaxUrl;
+
+    public function registerActiveAssets()
     {
         if ($this->_baseUrl === null) {
             $this->_baseUrl = ActiveAssets::register($this->getView())->baseUrl;
@@ -17,15 +22,69 @@ class AutocompleteAjax extends InputWidget
         return $this->_baseUrl;
     }
 
+    public function getUrl()
+    {
+        if ($this->_ajaxUrl === null) {
+            $this->_ajaxUrl = Url::toRoute($this->url);
+        }
+        return $this->_ajaxUrl;
+    }
+
     public function init()
     {
-//        echo $this->getView()->render('@keygenqt/imageAjax/views/view', ['widget' => $this]);
+        $value = $this->model->{$this->attribute};
+        $this->registerActiveAssets();
+
+        echo Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->getId() . '-hidden', 'class' => 'form-control']);
+        echo $value ? Html::tag('div', "<img src='{$this->registerActiveAssets()}/images/load.gif'/>", ['class' => 'autocomplete-image-load']) : '';
+        echo Html::textInput($this->attribute, '', array_merge(['id' => $this->getId(), 'class' => 'form-control'], $this->options));
+
+        if ($value) {
+            $this->getView()->registerJs("
+//              <script>
+                $(function(){
+                    $.ajax({
+                        type: 'GET',
+                        dataType: 'json',
+                        url: '{$this->getUrl()}',
+                        data: {term: '$value'},
+                        success: function(data) {
+                            if (data.length == 0) {
+                                $('#{$this->getId()}').attr('placeholder', 'User not found !!!');
+                            } else {
+                                $('#{$this->getId()}').val(data[0].label);
+                            }
+                            $('.autocomplete-image-load').hide();
+                        }
+                    });
+                });
+            ");
+        }
 
         $this->getView()->registerJs("
 //          <script>
-			var cache_{$this->getId()} = {};
-			jQuery('#{$this->getId()}').autocomplete({
 
+			var cache_{$this->getId()} = {};
+
+			jQuery('#{$this->getId()}').autocomplete(
+			{
+                minLength: 1,
+                source: function( request, response )
+                {
+                    var term = request.term;
+                    if ( term in cache_{$this->getId()} ) {
+                        response( cache_{$this->getId()} [term] );
+                        return;
+                    }
+                    $.getJSON('{$this->getUrl()}', request, function( data, status, xhr ) {
+                        cache_{$this->getId()} [term] = data;
+                        response(data);
+                    });
+                },
+                select: function(event, ui)
+                {
+                    $('#{$this->getId()}-hidden').val(ui.item.id);
+                }
 			});
         ");
 
