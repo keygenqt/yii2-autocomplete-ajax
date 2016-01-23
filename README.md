@@ -41,6 +41,44 @@ use keygenqt\autocompleteAjax\AutocompleteAjax;
 ]) ?>
 ```
 
+Controller:
+
+```php
+class AjaxController extends Controller
+{
+    public function actionSearchUser($term)
+    {
+        if (Yii::$app->request->isAjax) {
+
+            $users = [];
+
+            if (is_numeric($term)) {
+                /** @var User $user */
+                $user = User::findOne(['id' => $term]);
+                if ($user) {
+                    $users[] = [
+                        'id' => $user['id'],
+                        'label' => $user['email'] . ' (user id: ' . $user['id'] . ')',
+                    ];
+                }
+            } else {
+
+                $q = addslashes($term);
+
+                foreach(User::find()->where("(`email` like '%{$q}%') LIMIT 15")->all() as $user) {
+                    $users[] = [
+                        'id' => $user['id'],
+                        'label' => $user['email'] . ' (user id: ' . $user['id'] . ')',
+                    ];
+                }
+            }
+
+            echo JSON::encode($users);
+        }
+    }
+}
+```
+
 ## License
 
 **yii2-autocomplete-ajax** is released under the BSD 3-Clause License. See the bundled `LICENSE.md` for details.
