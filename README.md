@@ -37,7 +37,7 @@ use keygenqt\autocompleteAjax\AutocompleteAjax;
 // Normal select with ActiveForm & model
 <?= $form->field($model, 'user_id')->widget(AutocompleteAjax::classname(), [
     'url' => ['ajax/search-user'],
-    'options' => ['placeholder' => 'Find by user email.']
+    'options' => ['placeholder' => 'Find by user email or user id.']
 ]) ?>
 ```
 
