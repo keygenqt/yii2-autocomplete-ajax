@@ -20,7 +20,7 @@
  * MA 02110-1301, USA.
  */
 
-namespace keygenqt\imageAjax;
+namespace keygenqt\autocompleteAjax;
 
 use \yii\web\AssetBundle;
 use \app\components\JavaScript;
@@ -31,13 +31,14 @@ use \app\components\JavaScript;
  */
 class ActiveAssets extends AssetBundle
 {
-	public $sourcePath = '@keygenqt/imageAjax/assets';
+	public $sourcePath = '@keygenqt/autocompleteAjax/assets';
 
 	public $js = [
-		'js/dropzone.js',
+		'js/jquery-ui-1.9.2.custom.min.js',
 	];
 
 	public $css = [
-		'css/yii2-image-ajax.css'
+		'css/jquery-ui-1.9.2.custom.min.css',
+		'css/yii2-autocomplete-ajax.css',
 	];
 }
