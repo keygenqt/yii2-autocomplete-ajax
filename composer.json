@@ -1,8 +1,8 @@
 {
-  "name": "keygenqt/yii2-image-ajax",
-  "description": "Widget from form image ajax load.",
-  "keywords": ["yii2", "extension", "widget", "image", "ajax", "jquery", "plugin"],
-  "homepage": "https://github.com/keygenqt/yii2-image-ajax",
+  "name": "keygenqt/yii2-autocomplete-ajax",
+  "description": "A simple way to search model id of the attributes model.",
+  "keywords": ["yii2", "extension", "widget", "autocomplete", "ajax", "jquery", "plugin"],
+  "homepage": "https://github.com/keygenqt/yii2-autocomplete-ajax",
   "type": "yii2-extension",
   "license": "BSD-3-Clause",
   "version":"0.5.0",
@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "keygenqt\\imageAjax\\": ""
+      "keygenqt\\autocompleteAjax\\": ""
     }
   }
 }
