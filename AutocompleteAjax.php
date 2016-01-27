@@ -30,18 +30,13 @@ class AutocompleteAjax extends InputWidget
         return $this->_ajaxUrl;
     }
 
-    public function init()
+    public function run()
     {
         $value = $this->model->{$this->attribute};
         $this->registerActiveAssets();
 
-        echo Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->getId() . '-hidden', 'class' => 'form-control']);
-        echo $value ? Html::tag('div', "<img src='{$this->registerActiveAssets()}/images/load.gif'/>", ['class' => 'autocomplete-image-load']) : '';
-        echo Html::textInput($this->attribute, '', array_merge(['id' => $this->getId(), 'class' => 'form-control'], $this->options));
-
         if ($value) {
             $this->getView()->registerJs("
-//              <script>
                 $(function(){
                     $.ajax({
                         type: 'GET',
@@ -62,10 +57,7 @@ class AutocompleteAjax extends InputWidget
         }
 
         $this->getView()->registerJs("
-//          <script>
-
 			var cache_{$this->getId()} = {};
-
 			jQuery('#{$this->getId()}').autocomplete(
 			{
                 minLength: 1,
@@ -88,6 +80,8 @@ class AutocompleteAjax extends InputWidget
 			});
         ");
 
-        parent::init();
+        return Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->getId() . '-hidden', 'class' => 'form-control'])
+            . ($value ? Html::tag('div', "<img src='{$this->registerActiveAssets()}/images/load.gif'/>", ['class' => 'autocomplete-image-load']) : '')
+            . Html::textInput($this->attribute, '', array_merge(['id' => $this->getId(), 'class' => 'form-control'], $this->options));
     }
 }
