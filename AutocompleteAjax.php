@@ -82,6 +82,6 @@ class AutocompleteAjax extends InputWidget
 
         return Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->getId() . '-hidden', 'class' => 'form-control'])
             . ($value ? Html::tag('div', "<img src='{$this->registerActiveAssets()}/images/load.gif'/>", ['class' => 'autocomplete-image-load']) : '')
-            . Html::textInput($this->attribute, '', array_merge(['id' => $this->getId(), 'class' => 'form-control'], $this->options));
+            . Html::textInput($this->attribute, '', array_merge($this->options, ['id' => $this->getId(), 'class' => 'form-control']));
     }
 }
