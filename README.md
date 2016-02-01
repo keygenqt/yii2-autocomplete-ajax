@@ -12,7 +12,13 @@ Either add
 ```
 "require": {
     "keygenqt/yii2-autocomplete-ajax": "*"
-}
+},
+"repositories":[
+    {
+        "type": "git",
+        "url": "https://github.com/keygenqt/yii2-autocomplete-ajax.git"
+    }
+]
 ```
 
 of your `composer.json` file.
@@ -44,30 +50,31 @@ class AjaxController extends Controller
     {
         if (Yii::$app->request->isAjax) {
 
-            $users = [];
+            $results = [];
 
             if (is_numeric($term)) {
-                /** @var User $user */
-                $user = User::findOne(['id' => $term]);
-                if ($user) {
-                    $users[] = [
-                        'id' => $user['id'],
-                        'label' => $user['email'] . ' (user id: ' . $user['id'] . ')',
+                /** @var Tag $model */
+                $model = Tag::findOne(['id' => $term]);
+                
+                if ($model) {
+                    $results[] = [
+                        'id' => $model['id'],
+                        'label' => $model['email'] . ' (model id: ' . $model['id'] . ')',
                     ];
                 }
             } else {
 
                 $q = addslashes($term);
 
-                foreach(User::find()->where("(`email` like '%{$q}%') LIMIT 15")->all() as $user) {
-                    $users[] = [
-                        'id' => $user['id'],
-                        'label' => $user['email'] . ' (user id: ' . $user['id'] . ')',
+                foreach(Tag::find()->where("(`email` like '%{$q}%') LIMIT 15")->all() as $model) {
+                    $results[] = [
+                        'id' => $model['id'],
+                        'label' => $model['email'] . ' (model id: ' . $model['id'] . ')',
                     ];
                 }
             }
 
-            echo JSON::encode($users);
+            echo JSON::encode($results);
         }
     }
 }

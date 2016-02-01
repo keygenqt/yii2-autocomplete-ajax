@@ -25,8 +25,12 @@
     width: 27px;
     position: absolute;
     top: 4px;
-    left: 19px;
+    left: 5px;
 }
 .autocomplete-image-load img {
     width: 100%;
+}
+.ui-autocomplete {
+	max-height: 500px;
+	overflow-y: auto;
 }
