@@ -129,6 +129,8 @@ class AutocompleteAjax extends InputWidget
         } else {
             $this->getView()->registerJs("
                 var cache_{$this->getId()} = {};
+                var cache_{$this->getId()}_1 = {};
+                var cache_{$this->getId()}_2 = {};
                 jQuery('#{$this->getId()}').autocomplete(
                 {
                     minLength: 1,
