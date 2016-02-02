@@ -8,7 +8,7 @@ use yii\widgets\InputWidget;
 
 class AutocompleteAjax extends InputWidget
 {
-    public $multiple = true;
+    public $multiple = false;
     public $url = [];
     public $options = [];
 
