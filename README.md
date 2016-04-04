@@ -12,13 +12,7 @@ Either add
 ```
 "require": {
     "keygenqt/yii2-autocomplete-ajax": "*"
-},
-"repositories":[
-    {
-        "type": "git",
-        "url": "https://github.com/keygenqt/yii2-autocomplete-ajax.git"
-    }
-]
+}
 ```
 
 of your `composer.json` file.
@@ -36,6 +30,7 @@ use keygenqt\autocompleteAjax\AutocompleteAjax;
 
 // Normal select with ActiveForm & model
 <?= $form->field($model, 'user_id')->widget(AutocompleteAjax::classname(), [
+    'multiple' => false,
     'url' => ['ajax/search-user'],
     'options' => ['placeholder' => 'Find by user email or user id.']
 ]) ?>

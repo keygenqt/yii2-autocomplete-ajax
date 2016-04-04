@@ -15,6 +15,10 @@ class ActiveAssets extends AssetBundle
 		'js/jquery-ui-1.9.2.custom.min.js',
 	];
 
+	public $depends = [
+		'yii\web\JqueryAsset'
+	];
+
 	public $css = [
 		'css/jquery-ui-1.9.2.custom.min.css',
 		'css/yii2-autocomplete-ajax.css',
