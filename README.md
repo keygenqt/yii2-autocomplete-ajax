@@ -61,7 +61,7 @@ class AjaxController extends Controller
 
                 $q = addslashes($term);
 
-                foreach(Tag::find()->where("(`email` like '%{$q}%') LIMIT 15")->all() as $model) {
+                foreach(Tag::find()->where("(`email` like '%{$q}%')")->all() as $model) {
                     $results[] = [
                         'id' => $model['id'],
                         'label' => $model['email'] . ' (model id: ' . $model['id'] . ')',
@@ -69,7 +69,7 @@ class AjaxController extends Controller
                 }
             }
 
-            echo JSON::encode($results);
+            echo Json::encode($results);
         }
     }
 }
