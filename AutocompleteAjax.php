@@ -44,7 +44,8 @@ class AutocompleteAjax extends InputWidget
                     if (event.keyCode == 8 && !$('#{$this->getId()}').val().length) {
                         
                         $('#{$this->getId()}-hidden').val('');
-                            
+                        $('#{$this->getId()}-hidden').change();
+                        
                     } else if ($('.ui-autocomplete').css('display') == 'none' && 
                         $('#{$this->getId()}-hidden').val().split(', ').length > $(this).val().split(', ').length) {
                             
