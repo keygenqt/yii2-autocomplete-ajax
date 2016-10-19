@@ -44,7 +44,8 @@ class AutocompleteAjax extends InputWidget
                     if (event.keyCode == 8 && !$('#{$this->getId()}').val().length) {
                         
                         $('#{$this->getId()}-hidden').val('');
-                            
+                        $('#{$this->getId()}-hidden').change();
+                        
                     } else if ($('.ui-autocomplete').css('display') == 'none' && 
                         $('#{$this->getId()}-hidden').val().split(', ').length > $(this).val().split(', ').length) {
                             
@@ -55,6 +56,7 @@ class AutocompleteAjax extends InputWidget
                             ids[i] = cache_{$this->getId()}_1[val[i]];
                         }
                         $('#{$this->getId()}-hidden').val(ids.join(', '));
+                        $('#{$this->getId()}-hidden').change();
                     }
                 });
                 
@@ -114,6 +116,7 @@ class AutocompleteAjax extends InputWidget
                         }
 
                         $('#{$this->getId()}-hidden').val(val.join(', '));
+                        $('#{$this->getId()}-hidden').change();
 
                         var names = [];
                         for (var i = 0; i<val.length; i++) {
@@ -149,6 +152,7 @@ class AutocompleteAjax extends InputWidget
                     select: function(event, ui)
                     {
                         $('#{$this->getId()}-hidden').val(ui.item.id);
+                         $('#{$this->getId()}-hidden').change();
                     }
                 });
             ");
