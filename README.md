@@ -23,6 +23,8 @@ The latest version of the module is v0.5.0 `BETA`.
 
 ## Usage
 
+### Find model
+
 View:
 
 ```php
@@ -74,6 +76,9 @@ class AjaxController extends Controller
     }
 }
 ```
+
+### Google Places API Web Service
+
 
 ```php
 <?= $form->field($model, 'address')->widget(\keygenqt\autocompleteAjax\AutocompleteAjax::classname(), [
