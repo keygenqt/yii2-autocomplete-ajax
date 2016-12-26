@@ -8,9 +8,11 @@ use yii\widgets\InputWidget;
 
 class AutocompleteAjax extends InputWidget
 {
+    public $startQuery = true;
     public $multiple = false;
     public $url = [];
     public $options = [];
+    public $afterSelect = 'function(event, ui) {}';
 
     private $_baseUrl;
     private $_ajaxUrl;
@@ -33,38 +35,42 @@ class AutocompleteAjax extends InputWidget
 
     public function run()
     {
+        $id = $this->getId();
+        $this->afterSelect = "var afterSelect{$id} = " . $this->afterSelect;
         $value = $this->model->{$this->attribute};
         $this->registerActiveAssets();
+
+        $this->getView()->registerJs("{$this->afterSelect}");
 
         if ($this->multiple) {
             
             $this->getView()->registerJs("
                 
-                $('#{$this->getId()}').keyup(function(event) {
-                    if (event.keyCode == 8 && !$('#{$this->getId()}').val().length) {
+                $('#{$id}').keyup(function(event) {
+                    if (event.keyCode == 8 && !$('#{$id}').val().length) {
                         
-                        $('#{$this->getId()}-hidden').val('');
-                        $('#{$this->getId()}-hidden').change();
+                        $('#{$id}-hidden').val('');
+                        $('#{$id}-hidden').change();
                         
                     } else if ($('.ui-autocomplete').css('display') == 'none' && 
-                        $('#{$this->getId()}-hidden').val().split(', ').length > $(this).val().split(', ').length) {
+                        $('#{$id}-hidden').val().split(', ').length > $(this).val().split(', ').length) {
                             
-                        var val = $('#{$this->getId()}').val().split(', ');
+                        var val = $('#{$id}').val().split(', ');
                         var ids = [];
                         for (var i = 0; i<val.length; i++) {
                             val[i] = val[i].replace(',', '').trim();
-                            ids[i] = cache_{$this->getId()}_1[val[i]];
+                            ids[i] = cache_{$id}_1[val[i]];
                         }
-                        $('#{$this->getId()}-hidden').val(ids.join(', '));
-                        $('#{$this->getId()}-hidden').change();
+                        $('#{$id}-hidden').val(ids.join(', '));
+                        $('#{$id}-hidden').change();
                     }
                 });
                 
-                $('#{$this->getId()}').keydown(function(event) {
+                $('#{$id}').keydown(function(event) {
                     
                     if (event.keyCode == 13 && $('.ui-autocomplete').css('display') == 'none') {
-                        submit_{$this->getId()} = $('#{$this->getId()}').closest('.grid-view');
-                        $('#{$this->getId()}').closest('.grid-view').yiiGridView('applyFilter');
+                        submit_{$id} = $('#{$id}').closest('.grid-view');
+                        $('#{$id}').closest('.grid-view').yiiGridView('applyFilter');
                     }
                     
                     if (event.keyCode == 13) {
@@ -73,32 +79,32 @@ class AutocompleteAjax extends InputWidget
                     
                 });
                 
-                $('body').on('beforeFilter', '#' + $('#{$this->getId()}').closest('.grid-view').attr('id') , function(event) {
-                    return submit_{$this->getId()};
+                $('body').on('beforeFilter', '#' + $('#{$id}').closest('.grid-view').attr('id') , function(event) {
+                    return submit_{$id};
                 });
 
-                var submit_{$this->getId()} = false;
-                var cache_{$this->getId()} = {};
-                var cache_{$this->getId()}_1 = {};
-                var cache_{$this->getId()}_2 = {};
-                jQuery('#{$this->getId()}').autocomplete(
+                var submit_{$id} = false;
+                var cache_{$id} = {};
+                var cache_{$id}_1 = {};
+                var cache_{$id}_2 = {};
+                jQuery('#{$id}').autocomplete(
                 {
                     minLength: 1,
                     source: function( request, response )
                     {
                         var term = request.term;
 
-                        if (term in cache_{$this->getId()}) {
-                            response( cache_{$this->getId()}[term]);
+                        if (term in cache_{$id}) {
+                            response( cache_{$id}[term]);
                             return;
                         }
                         $.getJSON('{$this->getUrl()}', request, function( data, status, xhr ) {
-                            cache_{$this->getId()} [term] = data;
+                            cache_{$id} [term] = data;
                                 
                             for (var i = 0; i<data.length; i++) {
-                                if (!(data[i].id in cache_{$this->getId()}_2)) {
-                                    cache_{$this->getId()}_1[data[i].label] = data[i].id;
-                                    cache_{$this->getId()}_2[data[i].id] = data[i].label;
+                                if (!(data[i].id in cache_{$id}_2)) {
+                                    cache_{$id}_1[data[i].label] = data[i].id;
+                                    cache_{$id}_2[data[i].id] = data[i].label;
                                 }
                             }
 
@@ -107,7 +113,7 @@ class AutocompleteAjax extends InputWidget
                     },
                     select: function(event, ui)
                     {
-                        var val = $('#{$this->getId()}-hidden').val().split(', ');
+                        var val = $('#{$id}-hidden').val().split(', ');
 
                         if (val[0] == '') {
                             val[0] = ui.item.id;
@@ -115,50 +121,55 @@ class AutocompleteAjax extends InputWidget
                             val[val.length] = ui.item.id;
                         }
 
-                        $('#{$this->getId()}-hidden').val(val.join(', '));
-                        $('#{$this->getId()}-hidden').change();
+                        $('#{$id}-hidden').val(val.join(', '));
+                        $('#{$id}-hidden').change();
 
                         var names = [];
                         for (var i = 0; i<val.length; i++) {
-                            names[i] = cache_{$this->getId()}_2[val[i]];
+                            names[i] = cache_{$id}_2[val[i]];
                         }
 
                         setTimeout(function() {
-                            $('#{$this->getId()}').val(names.join(', '));
+                            $('#{$id}').val(names.join(', '));
                         }, 0);
                     }
                 });
             ");
         } else {
             $this->getView()->registerJs("
-                var cache_{$this->getId()} = {};
-                var cache_{$this->getId()}_1 = {};
-                var cache_{$this->getId()}_2 = {};
-                jQuery('#{$this->getId()}').autocomplete(
+                var cache_{$id} = {};
+                var cache_{$id}_1 = {};
+                var cache_{$id}_2 = {};
+                jQuery('#{$id}').autocomplete(
                 {
                     minLength: 1,
                     source: function( request, response )
                     {
                         var term = request.term;
-                        if ( term in cache_{$this->getId()} ) {
-                            response( cache_{$this->getId()} [term] );
+                        if ( term in cache_{$id} ) {
+                            response( cache_{$id} [term] );
                             return;
                         }
                         $.getJSON('{$this->getUrl()}', request, function( data, status, xhr ) {
-                            cache_{$this->getId()} [term] = data;
+                            cache_{$id} [term] = data;
                             response(data);
                         });
                     },
                     select: function(event, ui)
                     {
-                        $('#{$this->getId()}-hidden').val(ui.item.id);
-                         $('#{$this->getId()}-hidden').change();
+                    
+                    console.log(ui);
+                    
+                        afterSelect{$id}(event, ui);
+                        
+                        $('#{$id}-hidden').val(ui.item.id);
+                         $('#{$id}-hidden').change();
                     }
                 });
             ");
         }
         
-        if ($value) {
+        if ($value && $this->startQuery) {
             $this->getView()->registerJs("
                 $(function(){
                     $.ajax({
@@ -169,17 +180,17 @@ class AutocompleteAjax extends InputWidget
                         success: function(data) {
 
                             if (data.length == 0) {
-                                $('#{$this->getId()}').attr('placeholder', 'User not found !!!');
+                                $('#{$id}').attr('placeholder', 'User not found !!!');
                             } else {
                                 var arr = [];
                                 for (var i = 0; i<data.length; i++) {
                                     arr[i] = data[i].label;
-                                    if (!(data[i].id in cache_{$this->getId()}_2)) {
-                                        cache_{$this->getId()}_1[data[i].label] = data[i].id;
-                                        cache_{$this->getId()}_2[data[i].id] = data[i].label;
+                                    if (!(data[i].id in cache_{$id}_2)) {
+                                        cache_{$id}_1[data[i].label] = data[i].id;
+                                        cache_{$id}_2[data[i].id] = data[i].label;
                                     }
                                 }
-                                $('#{$this->getId()}').val(arr.join(', '));
+                                $('#{$id}').val(arr.join(', '));
                             }
                             $('.autocomplete-image-load').hide();
                         }
@@ -190,9 +201,9 @@ class AutocompleteAjax extends InputWidget
         
         return Html::tag('div', 
                 
-            Html::activeHiddenInput($this->model, $this->attribute, ['id' => $this->getId() . '-hidden', 'class' => 'form-control'])
-            . ($value ? Html::tag('div', "<img src='{$this->registerActiveAssets()}/images/load.gif'/>", ['class' => 'autocomplete-image-load']) : '')
-            . Html::textInput('', '', array_merge($this->options, ['id' => $this->getId(), 'class' => 'form-control']))
+            Html::activeHiddenInput($this->model, $this->attribute, ['id' => $id . '-hidden', 'class' => 'form-control'])
+            . ($value && $this->startQuery ? Html::tag('div', "<img src='{$this->registerActiveAssets()}/images/load.gif'/>", ['class' => 'autocomplete-image-load']) : '')
+            . Html::textInput('', $value && !$this->startQuery ? $value : '', array_merge($this->options, ['id' => $id, 'class' => 'form-control']))
               
             , [
                 'style' => 'position: relative;'

@@ -75,6 +75,59 @@ class AjaxController extends Controller
 }
 ```
 
+```php
+<?= $form->field($model, 'address')->widget(\keygenqt\autocompleteAjax\AutocompleteAjax::classname(), [
+    'startQuery' => false,
+    'url' => ['ajax/search-place'],
+    'options' => ['placeholder' => 'Find place.'],
+    'afterSelect' => 'function(event, ui) { var value = JSON.parse(ui.item.data); updateMarker(value.lat, value.lng); }'
+]) ?>
+```
+
+```php
+/**
+ * enable "Google Places API Web Service" in https://console.developers.google.com
+ **/
+public function actionSearchPlace($term, $apiKey = '')
+{
+    $result = [];
+    $results = [];
+
+    if (Yii::$app->request->isAjax) {
+
+        /** CURL QUERY **/
+
+        $curl = curl_init('https://maps.googleapis.com/maps/api/place/textsearch/json?key=' . urlencode($apiKey) . '&language=en&query=' . urlencode($term));
+        curl_setopt ($curl, CURLOPT_RETURNTRANSFER, 1);
+        $response = curl_exec($curl);
+
+        $status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        if ($status !== 200) {
+            throw new NotFoundHttpException('Error: ' . curl_error($curl) . ' Code: ' . $status);
+        } else {
+            if (json_decode($response, true) && json_last_error() == JSON_ERROR_NONE) {
+                $result = json_decode($response, true);
+            }
+        }
+        curl_close($curl);
+
+        /** CURL QUERY **/
+
+        if (!empty($result['results'])) {
+            foreach($result['results'] as $model) {
+                $results[] = [
+                    'id' => $model['formatted_address'],
+                    'label' => $model['formatted_address'] . ' (model location: ' . json_encode($model['geometry']['location']) . ')',
+                    'data' => json_encode($model['geometry']['location']),
+                ];
+            }
+        }
+
+        echo Json::encode($results);
+    }
+}
+```
+
 ## License
 
 **yii2-autocomplete-ajax** is released under the BSD 3-Clause License. See the bundled `LICENSE.md` for details.
