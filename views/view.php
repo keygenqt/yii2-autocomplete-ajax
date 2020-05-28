@@ -67,7 +67,14 @@ use \yii\helpers\Html;
                 }
             });
 
-
+            $('#<?= $widget->textId ?>').keydown(function(event) {
+                var input = $('#<?= $widget->textId ?>')
+                var hidden = $('#<?= $widget->id ?>')
+                if (event.keyCode == 8 && $(hidden).val() != '') {
+                    input.val('')
+                    hidden.val('')
+                }
+            });
         })
 
     <?php if (!empty($widget->getValue())): ?>
