@@ -11,7 +11,7 @@ Either add
 
 ```
 "require": {
-    "keygenqt/yii2-autocomplete-ajax": "1.0.0"
+    "keygenqt/yii2-autocomplete-ajax": "1.0.3"
 }
 ```
 
