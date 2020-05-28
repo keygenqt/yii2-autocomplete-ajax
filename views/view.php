@@ -44,27 +44,42 @@ use \yii\helpers\Html;
     var <?= $widget->dataName ?> = {};
     var listener<?= $widget->textId ?> = <?= $widget->listener ?>
 
-    $(function () {
-        $('#<?= $widget->textId ?>').autocomplete({
-            appendTo: ".field-<?= $widget->id ?>",
-            minLength: 1,
-            source: function (request, response) {
-                var term = request.term;
-                if (term in <?= $widget->dataName ?>) {
-                    response(<?= $widget->dataName ?>[term]);
-                    return;
+        $(function () {
+            $('#<?= $widget->textId ?>').autocomplete({
+                appendTo: ".field-<?= $widget->id ?>",
+                minLength: 1,
+                source: function (request, response) {
+                    var term = request.term;
+                    if (term in <?= $widget->dataName ?>) {
+                        response(<?= $widget->dataName ?>[term]);
+                        return;
+                    }
+                    $('.image-autocompleteajax<?= $widget->textId ?>').show()
+                    $.getJSON('<?= $widget->url ?>', request, function (data, status, xhr) {
+                        $('.image-autocompleteajax<?= $widget->textId ?>').hide()
+                        <?= $widget->dataName ?>[term] = data;
+                        response(data);
+                    });
+                },
+                select: function (event, ui) {
+                    $('#<?= $widget->id ?>').val(ui.item['id'])
+                    listener<?= $widget->textId ?>(event, ui)
                 }
-                $('.image-autocompleteajax<?= $widget->textId ?>').show()
-                $.getJSON('<?= $widget->url ?>', request, function (data, status, xhr) {
-                    $('.image-autocompleteajax<?= $widget->textId ?>').hide()
-                    <?= $widget->dataName ?>[term] = data;
-                    response(data);
-                });
-            },
-            select: function (event, ui) {
-                $('#<?= $widget->id ?>').val(ui.item['id'])
-                listener<?= $widget->textId ?>(event, ui)
+            });
+
+
+        })
+
+    <?php if (!empty($widget->getValue())): ?>
+    $('.image-autocompleteajax<?= $widget->textId ?>').show()
+
+    $.getJSON('<?= $widget->url ?>?term=<?= $widget->getValue() ?>', function( data ) {
+        $('.image-autocompleteajax<?= $widget->textId ?>').hide()
+        for (var i = 0; i<data.length; i++) {
+            if (data[i].id == '<?= $widget->getValue() ?>') {
+                $('#<?= $widget->textId ?>').val(data[i].label)
             }
-        });
-    })
+        }
+    });
+    <?php endif; ?>
 </script>

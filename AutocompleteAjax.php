@@ -36,6 +36,7 @@ use yii\widgets\InputWidget;
  * @property string $textId
  * @property string $assets
  * @property string $attribute
+ * @property string $value
  */
 class AutocompleteAjax extends InputWidget
 {
@@ -81,5 +82,13 @@ class AutocompleteAjax extends InputWidget
             return Html::activeInput($type, $this->model, $this->attribute, $this->options);
         }
         return Html::input($type, $this->name, $this->value, $this->options);
+    }
+
+    public function getValue()
+    {
+        if ($this->hasModel()) {
+            return $this->model->{$this->attribute};
+        }
+        return $this->value;
     }
 }
