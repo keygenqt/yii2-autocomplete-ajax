@@ -1,6 +1,9 @@
 [Autocomplete Ajax](http://keygenqt.com/work/yii2-autocomplete-ajax)
 ===================
 
+![GitHub](https://img.shields.io/github/license/keygenqt/yii2-autocomplete-ajax)
+![Packagist Downloads](https://img.shields.io/packagist/dt/keygenqt/yii2-image-handler)
+
 This is the AutocompleteAjax widget and a Yii 2 enhanced wrapper for the [Autocomplete | jQuery UI](https://jqueryui.com/autocomplete/). A simple way to search model id of the attributes model.
 
 ## Installation
