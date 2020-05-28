@@ -22,11 +22,19 @@ use \yii\web\AssetBundle;
 /**
  * @author KeyGen <keygenqt@gmail.com>
  */
-class ActiveAssets extends AssetBundle
+class ActiveAssetsJqueryUi extends AssetBundle
 {
-	public $sourcePath = '@keygenqt/autocompleteAjax/assets';
+    public $sourcePath = '@bower/jquery-ui';
 
-	public $css = [
-		'css/yii2-autocomplete-ajax.css',
-	];
+    public $js = [
+        'jquery-ui.js',
+    ];
+
+    public $css = [
+        'themes/smoothness/jquery-ui.css',
+    ];
+
+    public $depends = [
+        'yii\web\JqueryAsset',
+    ];
 }
