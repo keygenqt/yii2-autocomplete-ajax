@@ -1,6 +1,6 @@
 {
 	"name": "keygenqt/yii2-autocomplete-ajax",
-	"description": "A simple way to search model id of the attributes model.",
+	"description": "A simple way to search model id of the attributes model",
 	"keywords": ["yii2", "extension", "widget", "autocomplete", "ajax", "jquery", "plugin"],
 	"homepage": "http://keygenqt.com/work/yii2-autocomplete-ajax",
 	"type": "yii2-extension",
