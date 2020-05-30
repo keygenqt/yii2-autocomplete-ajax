@@ -25,10 +25,7 @@ of your `composer.json` file.
 View:
 
 ```php
-use keygenqt\autocompleteAjax\AutocompleteAjax;
-
-// Normal select with ActiveForm & model
-<?= $form->field($model, 'complete_id')->widget(AutocompleteAjax::class, [
+<?= $form->field($model, 'complete_id')->widget(keygenqt\autocompleteAjax\AutocompleteAjax::class, [
     'url' => ['ajax/search'],
     'options' => ['placeholder' => 'Find by user email or user id.']
 ]) ?>
