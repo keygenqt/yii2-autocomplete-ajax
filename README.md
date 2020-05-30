@@ -22,8 +22,6 @@ of your `composer.json` file.
 
 ## Usage
 
-### Find model
-
 View:
 
 ```php
