@@ -1,7 +1,7 @@
 Autocomplete Ajax
 ===================
 
-![Packagist Downloads](https://img.shields.io/packagist/dt/keygenqt/yii2-autocomplete-ajax)
+![Packagist Downloads](https://img.shields.io/packagist/dt/keygenqt/yii2-autocomplete-ajax?label=Packagist%20Downloads)
 
 This is the AutocompleteAjax widget and a Yii 2 enhanced wrapper for the [Autocomplete | jQuery UI](https://jqueryui.com/autocomplete/). A simple way to search model id of the attributes model.
 
